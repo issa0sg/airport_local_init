@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  php-fpm:
+    build:
+      context: ./tt_forum/deployment/dev/
+      args:
+        HOST_UID: ${HOST_UID}
+        HOST_GID: ${HOST_GID}
+    volumes:
+      - ./tt_forum:/var/www/html
+    expose:
+      - 9000
+    networks:
+      - app-network
+
+  nginx:
+    build:
+      context: ./tt_nginx/deployment/dev/
+    ports:
+      - "80:80"
+    depends_on:
+      - php-fpm
+    networks:
+      - app-network
+
+  mariadb:
+    image: mariadb:11.0
+    environment:
+      - MARIADB_ROOT_PASSWORD
+    networks:
+      - app-network
+    volumes:
+      - ./mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:7.4.0-alpine
+    networks:
+      - app-network
+    ports:
+      - "6379:6379"
+
+networks:
+  app-network:
+    driver: bridge
