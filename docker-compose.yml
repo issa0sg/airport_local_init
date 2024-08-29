@@ -3,12 +3,12 @@ version: '3.8'
 services:
   php-fpm:
     build:
-      context: ./tt_forum/deployment/dev/
+      context: airport_core/deployment/dev/
       args:
         HOST_UID: ${HOST_UID}
         HOST_GID: ${HOST_GID}
     volumes:
-      - ./tt_forum:/var/www/html
+      - ./airport_core:/var/www/html
     expose:
       - 9000
     networks:
@@ -16,7 +16,7 @@ services:
 
   nginx:
     build:
-      context: ./tt_nginx/deployment/dev/
+      context: ./airport_nginx/deployment/dev/
     ports:
       - "80:80"
     depends_on:
